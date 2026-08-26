@@ -1,0 +1,411 @@
+1. Two Sum
+  Understand: Find two numbers that add up to target.
+  Steps:
+    Use a hash map to store seen numbers.
+    For each number, check if target - num exists in map.
+  JS approach: Use Map for O(1) lookups.
+
+2. Best Time to Buy and Sell Stock
+  Understand: Max profit from one buy/sell.
+  Steps:
+    Track minimum price so far.
+    Track max profit by comparing current price - min price.
+    JS approach: Loop through array, update min and profit.
+
+3. Contains Duplicate
+    Understand: Check if any number repeats.
+    Steps:
+      Use a Set to store seen numbers.
+      If already in set, return true.
+      JS approach: Set for uniqueness.
+
+4. Product of Array Except Self
+  Understand: Return array where each element is product of all except itself.
+  Steps:
+    Compute prefix products.
+    Compute suffix products.
+    Multiply prefix * suffix for each index.
+  JS approach: Two passes with arrays.
+
+5. Maximum Subarray (Kadane’s Algorithm)
+  Understand: Largest sum of contiguous subarray.
+  Steps:
+  Track current sum and max sum.
+  Reset current sum if it goes negative.
+  JS approach: Simple loop with variables.
+6. Maximum Product Subarray
+Understand: Largest product of contiguous subarray.
+
+Steps:
+
+Track both max and min product (because negatives flip).
+
+Update at each step.
+
+JS approach: Loop with two variables.
+
+7. Find Minimum in Rotated Sorted Array
+  Understand: Find smallest element in rotated sorted array.
+  Steps:
+  Use binary search.
+  Compare mid with right to decide search direction.
+  JS approach: While loop with pointers.
+
+8. Search in Rotated Sorted Array
+  Understand: Search target in rotated sorted array.
+  Steps:
+  Binary search.
+  Decide which half is sorted, then move pointers accordingly.
+  JS approach: While loop with conditions.
+
+9. 3Sum
+  Understand: Find triplets that sum to zero.
+  Steps:
+  Sort array.
+  Fix one number, use two pointers for rest.
+  JS approach: Nested loop + two pointers.
+
+10. Container With Most Water
+  Understand: Max water between two lines.
+  Steps:
+  Two pointers at ends.
+  Move pointer with smaller height inward.
+  JS approach: While loop with two pointers.
+
+11. Longest Substring Without Repeating Characters
+    Understand: Length of longest substring with unique chars.
+    Steps:
+    Sliding window.
+    Use Set or Map to track characters.
+    JS approach: Two pointers + Set.
+
+12. Longest Repeating Character Replacement
+  Understand: Longest substring after replacing k chars.
+  Steps:
+  Sliding window.
+  Track frequency of chars.
+  Shrink window if replacements exceed k.
+  JS approach: Map for counts.
+
+13. Minimum Window Substring
+  Understand: Smallest substring containing all chars of target.
+  Steps:
+  Sliding window.
+  Track counts of target chars.
+  Expand and contract window until valid.
+  JS approach: Map for counts, two pointers.
+
+14. Valid Anagram
+  Understand: Check if two strings are anagrams.
+  Steps:
+  Count frequency of chars in both strings.
+  Compare counts.
+  JS approach: Map or object for counts.
+
+15. Group Anagrams
+  Understand: Group words that are anagrams.
+  Steps:
+  Sort each word’s letters → use as key.
+  Group words by key.
+  JS approach: Map with sorted string as key.
+
+✅ Notice the patterns:
+
+Hashing (Map, Set) → Two Sum, Contains Duplicate, Valid Anagram, Group Anagrams.
+
+Two pointers → 3Sum, Container With Most Water, Rotated Array problems.
+
+Sliding window → Longest Substring, Character Replacement, Minimum Window.
+
+Dynamic programming / Kadane → Maximum Subarray, Maximum Product Subarray.
+
+
+Great — now let’s move from the **DSA step-by-step logic** into the **optimized JavaScript solutions** for the first 15 Blind 75 problems. I’ll show you the **best approach in terms of time and space complexity** for each.  
+
+---
+
+### 🔑 Optimized JS Solutions (with complexities)
+
+1. **Two Sum**  
+   - Use a hash map for O(1) lookups.  
+   - **Time:** O(n), **Space:** O(n).
+
+```js
+function twoSum(nums, target) {
+  const map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    if (map.has(complement)) return [map.get(complement), i];
+    map.set(nums[i], i);
+  }
+}
+```
+
+---
+
+2. **Best Time to Buy and Sell Stock**  
+   - Track min price and max profit.  
+   - **Time:** O(n), **Space:** O(1).
+
+```js
+function maxProfit(prices) {
+  let min = prices[0], profit = 0;
+  for (let p of prices) {
+    min = Math.min(min, p);
+    profit = Math.max(profit, p - min);
+  }
+  return profit;
+}
+```
+
+---
+
+3. **Contains Duplicate**  
+   - Use a `Set`.  
+   - **Time:** O(n), **Space:** O(n).
+
+```js
+function containsDuplicate(nums) {
+  return new Set(nums).size !== nums.length;
+}
+```
+
+---
+
+4. **Product of Array Except Self**  
+   - Prefix & suffix product arrays.  
+   - **Time:** O(n), **Space:** O(1) (excluding output).
+
+```js
+function productExceptSelf(nums) {
+  const res = Array(nums.length).fill(1);
+  let prefix = 1, suffix = 1;
+  for (let i = 0; i < nums.length; i++) {
+    res[i] *= prefix;
+    prefix *= nums[i];
+  }
+  for (let i = nums.length - 1; i >= 0; i--) {
+    res[i] *= suffix;
+    suffix *= nums[i];
+  }
+  return res;
+}
+```
+
+---
+
+5. **Maximum Subarray (Kadane’s)**  
+   - Track current and max sum.  
+   - **Time:** O(n), **Space:** O(1).
+
+```js
+function maxSubArray(nums) {
+  let curr = nums[0], max = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    curr = Math.max(nums[i], curr + nums[i]);
+    max = Math.max(max, curr);
+  }
+  return max;
+}
+```
+
+---
+
+6. **Maximum Product Subarray**  
+   - Track max & min product.  
+   - **Time:** O(n), **Space:** O(1).
+
+```js
+function maxProduct(nums) {
+  let max = nums[0], min = nums[0], res = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    const temp = max;
+    max = Math.max(nums[i], nums[i] * max, nums[i] * min);
+    min = Math.min(nums[i], nums[i] * temp, nums[i] * min);
+    res = Math.max(res, max);
+  }
+  return res;
+}
+```
+
+---
+
+7. **Find Minimum in Rotated Sorted Array**  
+   - Binary search.  
+   - **Time:** O(log n), **Space:** O(1).
+
+```js
+function findMin(nums) {
+  let l = 0, r = nums.length - 1;
+  while (l < r) {
+    const mid = Math.floor((l + r) / 2);
+    if (nums[mid] > nums[r]) l = mid + 1;
+    else r = mid;
+  }
+  return nums[l];
+}
+```
+
+---
+
+8. **Search in Rotated Sorted Array**  
+   - Modified binary search.  
+   - **Time:** O(log n), **Space:** O(1).
+
+```js
+function search(nums, target) {
+  let l = 0, r = nums.length - 1;
+  while (l <= r) {
+    const mid = Math.floor((l + r) / 2);
+    if (nums[mid] === target) return mid;
+    if (nums[l] <= nums[mid]) {
+      if (target >= nums[l] && target < nums[mid]) r = mid - 1;
+      else l = mid + 1;
+    } else {
+      if (target > nums[mid] && target <= nums[r]) l = mid + 1;
+      else r = mid - 1;
+    }
+  }
+  return -1;
+}
+```
+
+---
+
+9. **3Sum**  
+   - Sort + two pointers.  
+   - **Time:** O(n²), **Space:** O(1).
+
+```js
+function threeSum(nums) {
+  nums.sort((a, b) => a - b);
+  const res = [];
+  for (let i = 0; i < nums.length - 2; i++) {
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
+    let l = i + 1, r = nums.length - 1;
+    while (l < r) {
+      const sum = nums[i] + nums[l] + nums[r];
+      if (sum === 0) {
+        res.push([nums[i], nums[l], nums[r]]);
+        while (nums[l] === nums[l + 1]) l++;
+        while (nums[r] === nums[r - 1]) r--;
+        l++; r--;
+      } else if (sum < 0) l++;
+      else r--;
+    }
+  }
+  return res;
+}
+```
+
+---
+
+10. **Container With Most Water**  
+   - Two pointers.  
+   - **Time:** O(n), **Space:** O(1).
+
+```js
+function maxArea(height) {
+  let l = 0, r = height.length - 1, res = 0;
+  while (l < r) {
+    res = Math.max(res, Math.min(height[l], height[r]) * (r - l));
+    if (height[l] < height[r]) l++;
+    else r--;
+  }
+  return res;
+}
+```
+
+---
+
+11. **Longest Substring Without Repeating Characters**  
+   - Sliding window + Set.  
+   - **Time:** O(n), **Space:** O(n).
+
+```js
+function lengthOfLongestSubstring(s) {
+  let set = new Set(), l = 0, res = 0;
+  for (let r = 0; r < s.length; r++) {
+    while (set.has(s[r])) {
+      set.delete(s[l]);
+      l++;
+    }
+    set.add(s[r]);
+    res = Math.max(res, r - l + 1);
+  }
+  return res;
+}
+```
+
+---
+
+12. **Longest Repeating Character Replacement**  
+   - Sliding window + frequency map.  
+   - **Time:** O(n), **Space:** O(26).
+
+```js
+function characterReplacement(s, k) {
+  const count = {};
+  let l = 0, maxCount = 0, res = 0;
+  for (let r = 0; r < s.length; r++) {
+    count[s[r]] = (count[s[r]] || 0) + 1;
+    maxCount = Math.max(maxCount, count[s[r]]);
+    while ((r - l + 1) - maxCount > k) {
+      count[s[l]]--;
+      l++;
+    }
+    res = Math.max(res, r - l + 1);
+  }
+  return res;
+}
+```
+
+---
+
+13. **Minimum Window Substring**  
+   - Sliding window + hash map.  
+   - **Time:** O(n), **Space:** O(n).
+
+```js
+function minWindow(s, t) {
+  const need = {}, have = {};
+  for (let c of t) need[c] = (need[c] || 0) + 1;
+  let required = Object.keys(need).length, formed = 0;
+  let l = 0, res = [0, Infinity];
+  for (let r = 0; r < s.length; r++) {
+    have[s[r]] = (have[s[r]] || 0) + 1;
+    if (need[s[r]] && have[s[r]] === need[s[r]]) formed++;
+    while (formed === required) {
+      if (r - l < res[1] - res[0]) res = [l, r];
+      have[s[l]]--;
+      if (need[s[l]] && have[s[l]] < need[s[l]]) formed--;
+      l++;
+    }
+  }
+  return res[1] === Infinity ? "" : s.slice(res[0], res[1] + 1);
+}
+```
+
+---
+
+14. **Valid Anagram**  
+   - Count chars.  
+   - **Time:** O(n), **Space:** O(1) (26 letters).
+
+```js
+function isAnagram(s, t) {
+  if (s.length !== t.length) return false;
+  const count = {};
+  for (let c of s) count[c] = (count[c] || 0) + 1;
+  for (let c of t) {
+    if (!count[c]) return false;
+    count[c]--;
+  }
+  return true;
+}
+```
+
+---
+
+15. **Group Anagrams**  
+   - Sort word → use
